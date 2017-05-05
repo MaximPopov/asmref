@@ -45,8 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
+    <Compile Include="DownwardInspector.cs" />
+    <Compile Include="Inspector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpwardInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
