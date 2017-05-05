@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
+    <Compile Include="AssemblyLoader.cs" />
     <Compile Include="DownwardInspector.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Inspector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

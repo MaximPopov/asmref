@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace asmref
 {
-    class DownwardInspector : Inspector
+    internal class DownwardInspector : Inspector
     {
         public DownwardInspector(TextWriter writer, bool isVerboseOutput)
             : base(writer, isVerboseOutput)
@@ -11,9 +14,25 @@ namespace asmref
 
         }
 
-        public override void InspectReferences(string rootPath, string assemblyOrFileName)
+        public override int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName)
         {
-            throw new NotImplementedException();
+            var baseAssembly = assemblies.FirstOrDefault(asm => asm.HasShortName(assemblyOrFileName) || asm.IsLocatedIn(assemblyOrFileName));
+            if (baseAssembly == null)
+            {
+                Writer.WriteLine($@"Cannot find ""{assemblyOrFileName}"" assembly.");
+                return 1;
+            }
+
+            var referencedAssemblyNames = baseAssembly.GetReferencedAssemblies();
+            Array.Sort(referencedAssemblyNames, (n1, n2) => string.CompareOrdinal(n1.FullName, n2.FullName));
+
+            Writer.WriteLine(baseAssembly.GetName());
+            foreach (var referencedAssemblyName in referencedAssemblyNames)
+            {
+                Writer.WriteLine($" └─> {referencedAssemblyName}");
+            }
+            
+            return 0;
         }
     }
 }

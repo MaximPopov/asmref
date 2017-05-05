@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace asmref
 {
@@ -22,6 +18,16 @@ namespace asmref
                 return -1;
             }
 
+            var rootPath = Directory.GetCurrentDirectory();
+            var loader = new AssemblyLoader();
+            var assemblies = loader.LoadAssemblies(rootPath);
+
+            writer.WriteLine($"Number of assemblies found in the current folder: {assemblies.Count}");
+            if (assemblies.Count == 0)
+            {
+                return -1;
+            }
+
             Inspector inspector;
             if (arguments.IsUpward)
             {
@@ -32,10 +38,8 @@ namespace asmref
                 inspector = new DownwardInspector(writer, arguments.IsVerboseOutput);
             }
 
-            string rootPath = Directory.GetCurrentDirectory();
-            inspector.InspectReferences(rootPath, arguments.AssemblyOrFileName);
-
-            return 0;
+            return inspector.InspectReferences(assemblies, arguments.AssemblyOrFileName);
         }
+
     }
 }

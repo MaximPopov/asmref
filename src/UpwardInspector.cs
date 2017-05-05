@@ -8,68 +8,40 @@ namespace asmref
 {
     sealed class UpwardInspector : Inspector
     {
-        public UpwardInspector(TextWriter Writer, bool isVerboseOutput)
-            : base(Writer, isVerboseOutput)
+        public UpwardInspector(TextWriter writer, bool isVerboseOutput)
+            : base(writer, isVerboseOutput)
         {
         }
 
-        public override void InspectReferences(string rootPath, string assemblyOrFileName)
+        public override int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName)
         {
-            int scannedCount = 0;
-            int foundCount = 0;
+            string shortAssemblyName;
+            var baseAssembly = assemblies.FirstOrDefault(asm => asm.HasShortName(assemblyOrFileName) || asm.IsLocatedIn(assemblyOrFileName));
 
-            var results = new Dictionary<string, List<AssemblyName>>();
-            string shortAssemblyName = assemblyOrFileName;
-            Assembly baseAssembly = null;
-
-            if (AssemblyExtensionRegex.IsMatch(assemblyOrFileName))
+            if (baseAssembly != null)
             {
-                baseAssembly = Load(Path.Combine(rootPath, assemblyOrFileName));
-                if (baseAssembly != null)
-                {
-                    shortAssemblyName = baseAssembly.GetName().Name;
-                }
-                else
-                {
-                    shortAssemblyName = Path.GetFileNameWithoutExtension(assemblyOrFileName);
-                }
+                // This is to set the correct case.
+                shortAssemblyName = baseAssembly.GetName().Name;
+            }
+            else if (assemblyOrFileName.LooksLikeAssemblyFile())
+            {
+                shortAssemblyName = Path.GetFileNameWithoutExtension(assemblyOrFileName);
+            }
+            else
+            {
+                shortAssemblyName = assemblyOrFileName;
             }
 
-            foreach (var fullAssemblyPath in Directory.EnumerateFiles(rootPath, "*.*", SearchOption.TopDirectoryOnly))
+            var results = new Dictionary<string, List<AssemblyName>>();
+            var foundCount = 0;
+
+            foreach (var assembly in assemblies)
             {
-                var extension = Path.GetExtension(fullAssemblyPath);
-                if (extension == null || !AssemblyExtensionRegex.IsMatch(extension))
-                {
-                    continue;
-                }
-
-                var assembly = Load(fullAssemblyPath);
-                if (assembly == null)
-                {
-                    if (IsVerboseOutput)
-                    {
-                        Writer.WriteLine($"\t!!! {Path.GetFileName(fullAssemblyPath)} failed to load into reflection context (perhaps it's not an assembly?)");
-                    }
-                    continue;
-                }
-
-                scannedCount++;
-
-                // Check if this is the base assembly.
-                if (IsSameName(assembly.GetName(), shortAssemblyName))
-                {
-                    if (baseAssembly == null)
-                    {
-                        baseAssembly = assembly;
-                    }
-                    // Base assembly can't reference itself, so skip.
-                    continue;
-                }
-
                 foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
                 {
-                    if (IsSameName(referencedAssemblyName, shortAssemblyName))
+                    if (referencedAssemblyName.HasShortName(shortAssemblyName))
                     {
+                        // This is to set the correct case if it hasn't been done earlier.
                         shortAssemblyName = referencedAssemblyName.Name;
 
                         List<AssemblyName> assemblyNames;
@@ -110,7 +82,8 @@ namespace asmref
 
             Writer.WriteLine();
             Writer.WriteLine($"Number of assemblies that reference '{shortAssemblyName ?? assemblyOrFileName}': {foundCount}");
-            Writer.WriteLine($"Number of assemblies scanned: {scannedCount}");
+
+            return 0;
         }
     }
 }
