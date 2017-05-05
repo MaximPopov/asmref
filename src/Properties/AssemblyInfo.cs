@@ -1,26 +1,16 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("asmref")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle(".NET assembly reference inspection command line tool.")]
+[assembly: AssemblyDescription(".NET assembly reference inspection command line tool.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("asmref")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("© 2017 Maxim Popov")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3e6607ff-adcc-44f1-a817-ac62aa7eca5e")]
 
 // Version information for an assembly consists of the following four values:
 //
