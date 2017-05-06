@@ -32,11 +32,11 @@ namespace asmref
             Inspector inspector;
             if (arguments.IsUpward)
             {
-                inspector = new UpwardInspector(writer, arguments.IsVerboseOutput);
+                inspector = new UpwardInspector(writer);
             }
             else
             {
-                inspector = new DownwardInspector(writer, arguments.IsVerboseOutput);
+                inspector = new DownwardInspector(writer);
             }
 
             return inspector.InspectReferences(assemblies, arguments.AssemblyOrFileName);

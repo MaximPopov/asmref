@@ -13,7 +13,6 @@ namespace asmref
         {
             {"u", a => a.IsUpward = true},
             {"d", a => a.IsDownward = true},
-            {"v", a => a.IsVerboseOutput = true}
         };
 
         public string AssemblyOrFileName { get; private set; }
@@ -21,8 +20,6 @@ namespace asmref
         public bool IsUpward { get; private set; }
 
         public bool IsDownward { get; private set; }
-
-        public bool IsVerboseOutput { get; private set; }
 
         public string ErrorMessage { get; private set; }
 
@@ -87,7 +84,6 @@ Usage:
 
 -u   : Show assemblies that reference the given assembly (upward links).
 -d   : Show assemblies that are referenced the given assembly (downward links).
--v   : Verbose output. Display warning messages.
 
 ""-u"" and ""-d"" cannot be used together. If both are omitted, the default is ""-u"".";
         }

@@ -10,15 +10,11 @@ namespace asmref
 
         protected IWriter Writer { get; set; }
 
-        protected bool IsVerboseOutput { get; set; }
-
-        protected Inspector(IWriter writer, bool isVerboseOutput)
+        protected Inspector(IWriter writer)
         {
             Writer = writer;
-            IsVerboseOutput = isVerboseOutput;
         }
 
         public abstract int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName);
-
     }
 }

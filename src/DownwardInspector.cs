@@ -7,8 +7,8 @@ namespace asmref
 {
     internal class DownwardInspector : Inspector
     {
-        public DownwardInspector(IWriter writer, bool isVerboseOutput)
-            : base(writer, isVerboseOutput)
+        public DownwardInspector(IWriter writer)
+            : base(writer)
         {
         }
 

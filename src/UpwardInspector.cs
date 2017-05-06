@@ -8,8 +8,8 @@ namespace asmref
 {
     internal sealed class UpwardInspector : Inspector
     {
-        public UpwardInspector(IWriter writer, bool isVerboseOutput)
-            : base(writer, isVerboseOutput)
+        public UpwardInspector(IWriter writer)
+            : base(writer)
         {
         }
 
