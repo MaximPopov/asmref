@@ -29,5 +29,10 @@ namespace asmref
         {
             return string.Equals(Path.GetFileName(assembly.CodeBase), fileName, StringComparison.OrdinalIgnoreCase);
         }
+
+        public static string Format(this AssemblyName assemblyName)
+        {
+            return $"{assemblyName.Name} ({assemblyName.Version})";
+        }
     }
 }

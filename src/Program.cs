@@ -7,13 +7,13 @@ namespace asmref
     {
         static int Main(string[] args)
         {
-            var writer = Console.Out;
+            IWriter writer = new ConsoleWriter();
 
             var arguments = Arguments.Parse(args);
             if (arguments.ErrorMessage != null)
             {
                 writer.WriteLine();
-                writer.WriteLine(arguments.ErrorMessage);
+                writer.WriteLine(arguments.ErrorMessage, Style.Error);
                 writer.WriteLine(Arguments.BuildHelpMessage());
                 return -1;
             }
@@ -23,6 +23,7 @@ namespace asmref
             var assemblies = loader.LoadAssemblies(rootPath);
 
             writer.WriteLine($"Number of assemblies found in the current folder: {assemblies.Count}");
+            writer.WriteLine();
             if (assemblies.Count == 0)
             {
                 return -1;

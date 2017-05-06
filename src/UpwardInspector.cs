@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace asmref
 {
-    sealed class UpwardInspector : Inspector
+    internal sealed class UpwardInspector : Inspector
     {
-        public UpwardInspector(TextWriter writer, bool isVerboseOutput)
+        public UpwardInspector(IWriter writer, bool isVerboseOutput)
             : base(writer, isVerboseOutput)
         {
         }
@@ -32,7 +32,7 @@ namespace asmref
                 shortAssemblyName = assemblyOrFileName;
             }
 
-            var results = new Dictionary<string, List<AssemblyName>>();
+            var results = new Dictionary<AssemblyName, List<AssemblyName>>();
             var foundCount = 0;
 
             foreach (var assembly in assemblies)
@@ -45,10 +45,10 @@ namespace asmref
                         shortAssemblyName = referencedAssemblyName.Name;
 
                         List<AssemblyName> assemblyNames;
-                        if (!results.TryGetValue(referencedAssemblyName.FullName, out assemblyNames))
+                        if (!results.TryGetValue(referencedAssemblyName, out assemblyNames))
                         {
                             assemblyNames = new List<AssemblyName>();
-                            results.Add(referencedAssemblyName.FullName, assemblyNames);
+                            results.Add(referencedAssemblyName, assemblyNames);
                         }
                         assemblyNames.Add(assembly.GetName());
 
@@ -59,12 +59,12 @@ namespace asmref
 
             if (baseAssembly != null)
             {
-                Writer.WriteLine();
-                Writer.WriteLine($"Found assembly {baseAssembly.GetName()}");
+                Writer.Write("Found assembly ");
+                Writer.WriteLine(baseAssembly.GetName().Format(), Style.Emphasis);
             }
 
             var referencedAssemblyNames = results.Keys.ToArray();
-            Array.Sort(referencedAssemblyNames);
+            Array.Sort(referencedAssemblyNames, (n1, n2) => string.CompareOrdinal(n1.FullName, n2.FullName));
 
             foreach (var referencedAssemblyName in referencedAssemblyNames)
             {
@@ -75,9 +75,9 @@ namespace asmref
                 Writer.WriteLine();
                 foreach (var foundAssemblyName in foundAssemblyNames)
                 {
-                    Writer.WriteLine(foundAssemblyName.FullName);
+                    Writer.WriteLine(foundAssemblyName.Format());
                 }
-                Writer.WriteLine($"\t=> {referencedAssemblyName}");
+                Writer.WriteLine($"\t└─> {referencedAssemblyName.Format()}", Style.Emphasis);
             }
 
             Writer.WriteLine();
