@@ -10,7 +10,6 @@ namespace asmref
         public DownwardInspector(IWriter writer, bool isVerboseOutput)
             : base(writer, isVerboseOutput)
         {
-
         }
 
         public override int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName)
@@ -26,11 +25,12 @@ namespace asmref
             Array.Sort(referencedAssemblyNames, (n1, n2) => string.CompareOrdinal(n1.FullName, n2.FullName));
 
             Writer.WriteLine(baseAssembly.GetName().Format(), Style.Emphasis);
-            foreach (var referencedAssemblyName in referencedAssemblyNames)
+            for (int index = 0; index < referencedAssemblyNames.Length; index++)
             {
-                Writer.WriteLine($"\t└─> {referencedAssemblyName.Format()}");
+                var referencedAssemblyName = referencedAssemblyNames[index];
+                Writer.WriteLine($"   {(index < referencedAssemblyNames.Length - 1 ? Arrow : LastArrow)} {referencedAssemblyName.Format()}");
             }
-            
+
             return 0;
         }
     }

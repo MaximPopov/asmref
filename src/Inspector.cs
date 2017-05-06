@@ -5,6 +5,8 @@ namespace asmref
 {
     internal abstract class Inspector
     {
+        protected const string Arrow = "├─>";
+        protected const string LastArrow = "└─>";
 
         protected IWriter Writer { get; set; }
 

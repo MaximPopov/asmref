@@ -32,7 +32,7 @@ namespace asmref
                 shortAssemblyName = assemblyOrFileName;
             }
 
-            var results = new Dictionary<AssemblyName, List<AssemblyName>>();
+            var results = new Dictionary<string, List<AssemblyName>>(StringComparer.OrdinalIgnoreCase);
             var foundCount = 0;
 
             foreach (var assembly in assemblies)
@@ -44,11 +44,12 @@ namespace asmref
                         // This is to set the correct case if it hasn't been done earlier.
                         shortAssemblyName = referencedAssemblyName.Name;
 
+                        string formattedReferencedAssemblyName = referencedAssemblyName.Format();
                         List<AssemblyName> assemblyNames;
-                        if (!results.TryGetValue(referencedAssemblyName, out assemblyNames))
+                        if (!results.TryGetValue(formattedReferencedAssemblyName, out assemblyNames))
                         {
                             assemblyNames = new List<AssemblyName>();
-                            results.Add(referencedAssemblyName, assemblyNames);
+                            results.Add(formattedReferencedAssemblyName, assemblyNames);
                         }
                         assemblyNames.Add(assembly.GetName());
 
@@ -64,7 +65,7 @@ namespace asmref
             }
 
             var referencedAssemblyNames = results.Keys.ToArray();
-            Array.Sort(referencedAssemblyNames, (n1, n2) => string.CompareOrdinal(n1.FullName, n2.FullName));
+            Array.Sort(referencedAssemblyNames);
 
             foreach (var referencedAssemblyName in referencedAssemblyNames)
             {
@@ -77,7 +78,7 @@ namespace asmref
                 {
                     Writer.WriteLine(foundAssemblyName.Format());
                 }
-                Writer.WriteLine($"\t└─> {referencedAssemblyName.Format()}", Style.Emphasis);
+                Writer.WriteLine($"   {LastArrow} {referencedAssemblyName}", Style.Emphasis);
             }
 
             Writer.WriteLine();
