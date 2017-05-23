@@ -13,7 +13,7 @@ namespace asmref
         {
         }
 
-        public override int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName)
+        public override int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName, ISet<string> foundAssemblyNames)
         {
             string shortAssemblyName;
             var baseAssembly = assemblies.FirstOrDefault(asm => asm.HasShortName(assemblyOrFileName) || asm.IsLocatedIn(assemblyOrFileName));
@@ -69,20 +69,28 @@ namespace asmref
 
             foreach (var referencedAssemblyName in referencedAssemblyNames)
             {
-                var foundAssemblyNames = results[referencedAssemblyName];
+                var assemblyNames = results[referencedAssemblyName];
 
-                foundAssemblyNames.Sort((n1, n2) => string.CompareOrdinal(n1.FullName, n2.FullName));
+                assemblyNames.Sort((n1, n2) => string.CompareOrdinal(n1.FullName, n2.FullName));
 
                 Writer.WriteLine();
-                foreach (var foundAssemblyName in foundAssemblyNames)
+                foreach (var assemblyName in assemblyNames)
                 {
-                    Writer.WriteLine(foundAssemblyName.Format());
+                    Writer.WriteLine(assemblyName.Format());
                 }
                 Writer.WriteLine($"   {LastArrow} {referencedAssemblyName}", Style.Emphasis);
             }
 
             Writer.WriteLine();
             Writer.WriteLine($"Number of assemblies that reference '{shortAssemblyName ?? assemblyOrFileName}': {foundCount}");
+
+            if (foundAssemblyNames != null)
+            {
+                foreach (var assemblyName in results.Values.SelectMany(n => n))
+                {
+                    foundAssemblyNames.Add(assemblyName.Name);
+                }
+            }
 
             return 0;
         }

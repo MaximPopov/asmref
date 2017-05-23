@@ -12,7 +12,7 @@ namespace asmref
         {
         }
 
-        public override int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName)
+        public override int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName, ISet<string> foundAssemblyNames)
         {
             var baseAssembly = assemblies.FirstOrDefault(asm => asm.HasShortName(assemblyOrFileName) || asm.IsLocatedIn(assemblyOrFileName));
             if (baseAssembly == null)
@@ -29,6 +29,14 @@ namespace asmref
             {
                 var referencedAssemblyName = referencedAssemblyNames[index];
                 Writer.WriteLine($"   {(index < referencedAssemblyNames.Length - 1 ? Arrow : LastArrow)} {referencedAssemblyName.Format()}");
+            }
+
+            if (foundAssemblyNames != null)
+            {
+                foreach (var referencedAssemblyName in referencedAssemblyNames)
+                {
+                    foundAssemblyNames.Add(referencedAssemblyName.Name);
+                }
             }
 
             return 0;

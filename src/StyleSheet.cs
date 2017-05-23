@@ -10,6 +10,7 @@ namespace asmref
             { Style.Normal, ConsoleColor.Gray },
             { Style.Emphasis, ConsoleColor.White },
             { Style.Error, ConsoleColor.Red },
+            { Style.Command, ConsoleColor.Cyan },
         };
 
         public ConsoleColor GetTextColor(Style style)

@@ -13,6 +13,7 @@ namespace asmref
         {
             {"u", a => a.IsUpward = true},
             {"d", a => a.IsDownward = true},
+            {"i", a => a.IsInteractiveMode = true}
         };
 
         public string AssemblyOrFileName { get; private set; }
@@ -20,6 +21,8 @@ namespace asmref
         public bool IsUpward { get; private set; }
 
         public bool IsDownward { get; private set; }
+
+        public bool IsInteractiveMode { get; private set; }
 
         public string ErrorMessage { get; private set; }
 
@@ -72,6 +75,11 @@ namespace asmref
                 arguments.IsUpward = true;
             }
 
+            if (arguments.IsDownward && arguments.IsInteractiveMode)
+            {
+                return BuildFailedArguments("Downward inspection cannot be run in interactive mode.");
+            }
+
             return arguments;
         }
 
@@ -80,10 +88,11 @@ namespace asmref
             return $@"
 Usage:
 
-{Assembly.GetEntryAssembly().GetModules()[0].Name.ToLower()} [-u|-d] [-v] <short assembly name>|<assembly file name>
+{Assembly.GetEntryAssembly().GetModules()[0].Name.ToLower()} [-u [-i]|-d] <short assembly name>|<assembly file name>
 
 -u   : Show assemblies that reference the given assembly (upward links).
 -d   : Show assemblies that are referenced the given assembly (downward links).
+-i   : Interactive mode (for upward inspection only).
 
 ""-u"" and ""-d"" cannot be used together. If both are omitted, the default is ""-u"".";
         }

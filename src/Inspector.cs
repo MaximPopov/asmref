@@ -15,6 +15,6 @@ namespace asmref
             Writer = writer;
         }
 
-        public abstract int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName);
+        public abstract int InspectReferences(IReadOnlyList<Assembly> assemblies, string assemblyOrFileName, ISet<string> foundAssemblyNames);
     }
 }

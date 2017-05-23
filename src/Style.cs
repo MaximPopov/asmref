@@ -5,5 +5,6 @@
         Normal,
         Emphasis,
         Error,
+        Command,
     }
 }
