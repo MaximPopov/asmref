@@ -90,8 +90,8 @@ Usage:
 
 {Assembly.GetEntryAssembly().GetModules()[0].Name.ToLower()} [-u [-i]|-d] <short assembly name>|<assembly file name>
 
--u   : Show assemblies that reference the given assembly (upward links).
--d   : Show assemblies that are referenced the given assembly (downward links).
+-u   : Show assemblies that reference the given assembly (upward inspection).
+-d   : Show assemblies that are referenced by the given assembly (downward inspection).
 -i   : Interactive mode (for upward inspection only).
 
 ""-u"" and ""-d"" cannot be used together. If both are omitted, the default is ""-u"".";
